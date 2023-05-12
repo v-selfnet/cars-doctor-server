@@ -26,6 +26,7 @@ async function run() {
     await client.connect();
 
     const serviceCollection = client.db('carDoctorDB').collection('services')
+    const bookingsCollection = client.db('carDoctorDB').collection('bookings')
 
     // get data from mongo to server
     // http://localhost:5000/services/
@@ -47,7 +48,18 @@ async function run() {
         res.send(result);
     })
 
-    await client.db("admin").command({ ping: 1 });
+    // bookings
+    app.post('/bookings', async (req, res) => {
+      // server received data from client
+      const booking = req.body;
+      console.log('received data from client', booking)
+
+      // server send data to database
+      const result = await bookingsCollection.insertOne(booking)
+      res.send(result)
+    })
+
+    await client.db("admin").command({ ping: 4});
     console.log("Car Doctor Server successfully connected to MongoDB!");
   } finally {
     // await client.close();
