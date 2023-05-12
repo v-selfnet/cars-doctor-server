@@ -42,22 +42,38 @@ async function run() {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)};
         const options = {
-            projection: {title:1, price:1, service_id:1}
+            projection: {title:1, price:1, service_id:1, img:1}
         };
         const result = await serviceCollection.findOne(query, options);
         res.send(result);
     })
 
-    // bookings
+    // find all booking data with specific user
+    // read some data from database
+    // http://localhost:5000/bookings?email=ubri@gubri.com
+    // http://localhost:5000/bookings?email=ubri@gubri.com&sort=1
+    app.get('/bookings', async (req, res) => {
+      // console.log(req.query.email);
+      let query = {};
+      if(req.query?.email){
+        query = {email: req.query.email}
+      }
+      const result = await bookingsCollection.find(query).toArray();
+      res.send(result)
+    })
+
+    // bookings handle
     app.post('/bookings', async (req, res) => {
       // server received data from client
       const booking = req.body;
       console.log('received data from client', booking)
-
-      // server send data to database
+      // server send data to database booking data store
       const result = await bookingsCollection.insertOne(booking)
       res.send(result)
     })
+
+  
+
 
     await client.db("admin").command({ ping: 4});
     console.log("Car Doctor Server successfully connected to MongoDB!");
