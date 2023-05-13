@@ -72,6 +72,40 @@ async function run() {
       res.send(result)
     })
 
+    // optional: to check server get data
+    http://localhost:5000/bookings/645e3603b0caaec5af5a27b2
+    app.get('/bookings/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await bookingsCollection.findOne(query)
+      res.send(result)
+    })
+
+
+    // update put/patch
+    app.patch('/bookings/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const updatedBooking = req.body;
+      console.log('received from client', updatedBooking);
+      const updateDoc = {
+        $set: {
+          status: updatedBooking.status
+        },
+      };
+      const result = await bookingsCollection.updateOne(filter, updateDoc)
+      res.send(result)
+    })
+
+    // delete my Booking <BookingRow.jsx>
+    app.delete('/bookings/:id', async (req, res) => {
+      const id = req.params.id; 
+      const query = {_id: new ObjectId(id)};
+      const result = await bookingsCollection.deleteOne(query);
+      console.log(result)
+      res.send(result)
+    })
+
   
 
 
