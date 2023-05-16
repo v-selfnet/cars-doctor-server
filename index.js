@@ -23,6 +23,7 @@ const client = new MongoClient(uri, {
  });
 
 // JWT verify function middleware
+// client side in AuthProvider.jsx
 const verifyJWT = (req, res, next) => {
   console.log('hit the light, hitting verify JWT')
   console.log(req.headers.authorization);
@@ -95,6 +96,7 @@ const run = async () => {
       // console.log(req.headers.authorization);
 
       // call function verifyJWT() above between
+      // client side in AuthProvider.jsx
       const decoded = req.decoded;
       console.log('come back after verify token', decoded)
       if(decoded.email !== req.query.email){
